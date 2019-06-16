@@ -60,138 +60,6 @@
     </div>
 
     <script>
-        var oColumn = this.echarts.init(document.getElementById('column_show'));
-        var oColumnopt = {
-            title: {
-                text: '文章访问量',
-                left: 'center',
-                top: '10'
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data: ['奇趣事', '会生活', '爱旅行', '趣美味'],
-                top: '40'
-            },
-            toolbox: {
-                show: true,
-                feature: {
-                    mark: {
-                        show: true
-                    },
-                    dataView: {
-                        show: true,
-                        readOnly: false
-                    },
-                    magicType: {
-                        show: true,
-                        type: ['line', 'bar']
-                    },
-                    restore: {
-                        show: true
-                    },
-                    saveAsImage: {
-                        show: true
-                    }
-                }
-            },
-            calculable: true,
-            xAxis: [{
-                type: 'category',
-                data: ['1月', '2月', '3月', '4月', '5月']
-            }],
-            yAxis: [{
-                name: '访问量',
-                type: 'value'
-            }],
-            series: [{
-                name: '奇趣事',
-                type: 'bar',
-                barWidth: 20,
-                itemStyle: {
-                    normal: {
-                        areaStyle: {
-                            type: 'default'
-                        },
-                        color: '#fd956a'
-                    }
-                },
-                data: [800, 708, 920, 1090, 1200]
-            }, {
-                name: '会生活',
-                type: 'bar',
-                barWidth: 20,
-                itemStyle: {
-                    normal: {
-                        areaStyle: {
-                            type: 'default'
-                        },
-                        color: '#2bb6db'
-                    }
-                },
-                data: [400, 468, 520, 690, 800]
-            }, {
-                name: '爱旅行',
-                type: 'bar',
-                barWidth: 20,
-                itemStyle: {
-                    normal: {
-                        areaStyle: {
-                            type: 'default'
-                        },
-                        color: '#13cfd5'
-                    }
-                },
-                data: [500, 668, 520, 790, 900]
-            }, {
-                name: '趣美味',
-                type: 'bar',
-                barWidth: 20,
-                itemStyle: {
-                    normal: {
-                        areaStyle: {
-                            type: 'default'
-                        },
-                        color: '#00ce68'
-                    }
-                },
-                data: [600, 508, 720, 890, 1000]
-            }],
-            grid: {
-                show: true,
-                x: 50,
-                x2: 30,
-                y: 80,
-                height: 260
-            },
-            dataZoom: [ //给x轴设置滚动条
-                {
-                    start: 0, //默认为0
-                    end: 100 - 1000 / 31, //默认为100
-                    type: 'slider',
-                    show: true,
-                    xAxisIndex: [0],
-                    handleSize: 0, //滑动条的 左右2个滑动条的大小
-                    height: 8, //组件高度
-                    left: 45, //左边的距离
-                    right: 50, //右边的距离
-                    bottom: 26, //右边的距离
-                    handleColor: '#ddd', //h滑动图标的颜色
-                    handleStyle: {
-                        borderColor: "#cacaca",
-                        borderWidth: "1",
-                        shadowBlur: 2,
-                        background: "#ddd",
-                        shadowColor: "#ddd",
-                    }
-                }
-            ]
-        };
-        oColumn.setOption(oColumnopt);
-    </script>
-
-    <script>
         $(() => {
             // 总文章数 日新增文章数
             $.ajax({
@@ -320,13 +188,13 @@
                 }
             });
 
+            let legendData = [];
             // 文类文章数量比 Echarts
             $.ajax({
                 type: "get",
                 url: "http://localhost:8000/admin/article_category_count",
                 success: function(response) {
                     // 数据处理
-                    let legendData = [];
                     let seriesData = [];
                     for (let i = 0; i < response.data.length; i++) {
                         legendData.push(response.data[i].type);
@@ -398,6 +266,126 @@
                 }
             });
 
+            // 文章访问量 Echarts
+            $.ajax({
+                type: "get",
+                url: "http://localhost:8000/admin/article_category_visit ",
+                success: function(response) {
+                    // 数据处理
+                    let xAxisData = []
+                    let seriesData1 = []
+                    let seriesData2 = []
+                    for (let i = 0; i < response.data.length; i++) {
+                        xAxisData.push(response.data[i].month)
+                        seriesData1.push(response.data[i].all_count[0].count)
+                        seriesData2.push(response.data[i].all_count[1].count)
+                    }
+
+                    var oColumn = echarts.init(document.getElementById('column_show'));
+                    var oColumnopt = {
+                        title: {
+                            text: '文章访问量',
+                            left: 'center',
+                            top: '10'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: legendData,
+                            top: '40'
+                        },
+                        toolbox: {
+                            show: true,
+                            feature: {
+                                mark: {
+                                    show: true
+                                },
+                                dataView: {
+                                    show: true,
+                                    readOnly: false
+                                },
+                                magicType: {
+                                    show: true,
+                                    type: ['line', 'bar']
+                                },
+                                restore: {
+                                    show: true
+                                },
+                                saveAsImage: {
+                                    show: true
+                                }
+                            }
+                        },
+                        calculable: true,
+                        xAxis: [{
+                            type: 'category',
+                            data: xAxisData
+                        }],
+                        yAxis: [{
+                            name: '访问量',
+                            type: 'value'
+                        }],
+                        series: [{
+                            name: legendData[0],
+                            type: 'bar',
+                            barWidth: 20,
+                            itemStyle: {
+                                normal: {
+                                    areaStyle: {
+                                        type: 'default'
+                                    },
+                                    color: '#fd956a'
+                                }
+                            },
+                            data: seriesData1
+                        }, {
+                            name: legendData[1],
+                            type: 'bar',
+                            barWidth: 20,
+                            itemStyle: {
+                                normal: {
+                                    areaStyle: {
+                                        type: 'default'
+                                    },
+                                    color: '#2bb6db'
+                                }
+                            },
+                            data: seriesData2
+                        }],
+                        grid: {
+                            show: true,
+                            x: 50,
+                            x2: 30,
+                            y: 80,
+                            height: 260
+                        },
+                        dataZoom: [ //给x轴设置滚动条
+                            {
+                                start: 0, //默认为0
+                                end: 100 - 1000 / 31, //默认为100
+                                type: 'slider',
+                                show: true,
+                                xAxisIndex: [0],
+                                handleSize: 0, //滑动条的 左右2个滑动条的大小
+                                height: 8, //组件高度
+                                left: 45, //左边的距离
+                                right: 50, //右边的距离
+                                bottom: 26, //右边的距离
+                                handleColor: '#ddd', //h滑动图标的颜色
+                                handleStyle: {
+                                    borderColor: "#cacaca",
+                                    borderWidth: "1",
+                                    shadowBlur: 2,
+                                    background: "#ddd",
+                                    shadowColor: "#ddd",
+                                }
+                            }
+                        ]
+                    };
+                    oColumn.setOption(oColumnopt);
+                }
+            });
         })
     </script>
 
