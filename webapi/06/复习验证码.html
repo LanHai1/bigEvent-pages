@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="button" value="获取验证码" id="btn">
+    <script>
+        document.querySelector("#btn").onclick = function() {
+            let count = 3;
+            this.value = "3s后再次获取"
+            this.disabled = true
+
+            let timeId = setInterval(function() {
+                count--
+                document.querySelector("#btn").value = `${count}s后再次获取`
+                if (count == 0) {
+                    document.querySelector("#btn").disabled = false
+                    document.querySelector("#btn").value = "获取验证码"
+                    clearInterval(timeId)
+                }
+            }, 1000)
+        }
+    </script>
+</body>
+
+</html>

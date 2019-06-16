@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        table {
+            margin: 100px auto;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background-color: blue;
+        }
+        
+        td,
+        th {
+            border: 1px solid #000;
+            text-align: center;
+        }
+        
+        td {
+            width: 200px;
+            height: 30px;
+            line-height: 30px;
+        }
+        
+        tbody tr:last-child {
+            background-color: aqua
+        }
+    </style>
+</head>
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="all"><span>全选/全不选</span></th>
+                <th>选择你要学习的科目</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="checkbox" name="" id="" class="allInpCheck"></td>
+                <td>java</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="" id="" class="allInpCheck"></td>
+                <td>java1</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="" id="" class="allInpCheck"></td>
+                <td>java2</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="" id="" class="allInpCheck"></td>
+                <td>java3</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="" id="" class="allInpCheck"></td>
+                <td>java4</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="" id="" class="allInpCheck"></td>
+                <td>java5</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" name="" id="reverse">反选</td>
+                <td>反选</td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+        function $(id) {
+            return document.getElementById(id)
+        }
+        let allCheck = $("all")
+        let reverse = $("reverse")
+        let checkList = document.getElementsByClassName("allInpCheck")
+
+        allCheck.onclick = function() {
+            for (let i = 0; i < checkList.length; i++) {
+                checkList[i].checked = this.checked // 全选/全不选
+            }
+        }
+
+        reverse.onclick = function() {
+            for (let i = 0; i < checkList.length; i++) { // 反选
+                checkList[i].checked = !checkList[i].checked
+            }
+            allHander()
+        }
+
+        for (let i = 0; i < checkList.length; i++) { // 为每个选择按钮添加点击事件
+            checkList[i].onclick = function() {
+                allHander()
+            }
+        }
+
+        function allHander() { // 处理对应全选/全不选
+            let count = 0
+            for (let i = 0; i < checkList.length; i++) {
+                if (checkList[i].checked) {
+                    count++
+                }
+                allCheck.checked = count == checkList.length
+            }
+        }
+
+
+
+        /* 请将下列内容正确匹配,并将对应的字母编号填写到括号中 ( )
+        索引 a. 使用循环的方式获取数组中所有元素 ( )
+        length b. 数组的字面量创建方式 ( ) 
+        [ ] c. 数组中元素的个数，数值类型。 ( ) 
+        遍历 d. 获取数组中的某个元素的方式 
+        左侧括号内从上向下正确的顺序是（） */
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .clearFix {
+            *zoom: 1;
+        }
+        
+        .clearFix::after {
+            content: "";
+            display: block;
+            clear: both;
+            overflow: hidden;
+            height: 0;
+        }
+        
+        ul {
+            list-style: none;
+            margin: 60px 0;
+        }
+        
+        main {
+            width: 1200px;
+            margin: 20px auto;
+        }
+        
+        #ul_img>li {
+            float: left;
+            margin: 0 10px;
+        }
+        
+        #ul_img>li>a {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        #ul_img>li:first-child {
+            margin-left: 0;
+        }
+        
+        #place {
+            width: 400px;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>相册</h1>
+        <br>
+        <input type="button" value="翻牌子" id="btnRandom"> <input type="button" value="清空记录" id="remove">
+        <ul id="ul_img" class="clearFix">
+            <li>
+                <a href="images/1.jpg" title="这是第1张相片"><img src="images/1-small.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href="images/2.jpg" title="这是第2张相片"><img src="images/2-small.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href="images/3.jpg" title="这是第3张相片"><img src="images/3-small.jpg" alt=""></a>
+            </li>
+            <li>
+                <a href="images/4.jpg" title="这是第4张相片"><img src="images/4-small.jpg" alt=""></a>
+            </li>
+        </ul>
+        <img src="images/placeholder.png" alt="" id="place">
+        <br>
+        <span id="spanCont">这是描述信息</span>
+    </main>
+
+    <script>
+        // 根据ID获取元素
+        function $(id) {
+            return document.getElementById(id)
+        }
+        let btnRandom = $("btnRandom") // 随机翻牌
+        let btnRemove = $("remove") // 清空用户记录
+        let ul_a_active = $("ul_img").getElementsByTagName("a") // 图片超链接
+        let placeImg = $("place") // 图片占位
+        let spanCont = $("spanCont") // 描述信息
+
+        // 设置用户上一次点击的图片
+        let lastJson = JSON.parse(localGet()) || {
+            href: placeImg.src,
+            title: "这是描述信息"
+        }
+        setImgOrTitle(lastJson.href, lastJson.title)
+
+
+        for (let i = 0; i < ul_a_active.length; i++) { // 每个a标签点击事件 并 阻止跳转
+            ul_a_active[i].onclick = function() {
+                setImgOrTitle(this.href, this.title)
+                    // 存储数据
+                localSet(JSON.stringify({
+                    href: this.href,
+                    title: this.title
+                }))
+                return false // 阻止跳转
+            }
+        }
+
+        btnRandom.onclick = function() { // 随机翻牌
+            let rendomN = rendomNum(ul_a_active.length)
+            localSet(JSON.stringify({
+                href: ul_a_active[rendomN].href,
+                title: ul_a_active[rendomN].title
+            }))
+            setImgOrTitle(ul_a_active[rendomN].href, ul_a_active[rendomN].title)
+        }
+
+        btnRemove.onclick = function() { // 清空记录 
+            localSet(JSON.stringify({
+                href: "images/placeholder.png", // 不严谨 
+                title: "这是描述信息"
+            }))
+            setImgOrTitle("images/placeholder.png", "这是描述信息")
+        }
+
+        // 随机数
+        function rendomNum(maxNum) {
+            return parseInt(Math.random() * maxNum)
+        }
+
+        // 设置相册占位和详细信息
+        function setImgOrTitle(src, title) {
+            placeImg.src = src
+            spanCont.innerText = title
+        }
+
+        // 永久存储用户上一次点击的相册图片
+        function localSet(content) {
+            localStorage.setItem("imgXiXi", content)
+        }
+
+        // 获取用户上一次存储的数据
+        function localGet() {
+            return localStorage.getItem("imgXiXi")
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="button" value="隐藏" id="toggle">
+    <div class="box">岁的年纪开始你的</div>
+
+    <script>
+        let toggle = document.getElementById('toggle')
+        let box = document.getElementsByClassName('box')[0]
+
+
+        let flag = true
+
+        toggle.onclick = function() {
+            if (flag) {
+                box.style.display = "none"
+                this.value = "显示" // 事件处理中的this 就是 当前事件源 
+                flag = false
+            } else {
+                box.style.display = "block"
+                this.value = "隐藏"
+                flag = true
+            }
+
+        }
+
+        console.log(box.innerText)
+    </script>
+
+</body>
+
+</html>

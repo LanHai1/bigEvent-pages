@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="button" value="第1张" title="pic1.jpg">
+    <input type="button" value="第2张" title="pic2.jpg">
+    <input type="button" value="第3张" title="pic3.jpg">
+    <input type="button" value="第4张" title="pic4.jpg">
+    <input type="button" value="第5张" title="pic5.jpg">
+    <input type="button" value="第6张" title="pic6.jpg">
+    <br>
+    <img src="./images/pic1.jpg" alt="" id="img">
+    <script>
+        let inpList = document.getElementsByTagName("input")
+        let img = document.getElementById("img")
+        for (let i = 0; i < inpList.length; i++) {
+            inpList[i].onclick = function() {
+                img.src = "./images/" + this.title
+            }
+        }
+    </script>
+</body>
+
+</html>

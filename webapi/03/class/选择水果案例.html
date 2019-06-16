@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        select {
+            width: 120px;
+            height: 200px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <select name="" id="left" multiple>
+        <option>西瓜</option>
+        <option>香蕉</option>
+        <option>苹果</option>
+        <option>鸭梨</option>
+        <option>水蜜桃</option>
+        <option>凤梨</option>
+        <option>榴莲</option>
+        <option>荔枝</option>
+    </select>
+
+    <!--
+              gt:greater than
+             -->
+    <button id="btn1">&gt;&gt;</button>
+    <button id="btn2">&lt;&lt;</button>
+    <button id="btn3">&gt;</button>
+    <button id="btn4">&lt;</button>
+
+    <select name="" id="right" multiple>
+    </select>
+
+    <script>
+        function $(id) {
+            return document.getElementById(id)
+        }
+
+        // 从右到左
+        $("btn4").onclick = function() {
+            let rfChild = $("right").children
+            for (let i = rfChild.length - 1; i >= 0; i--) {
+                if (rfChild[i].selected) {
+                    $("left").appendChild(rfChild[i])
+                }
+            }
+
+        }
+
+        // 从左到右
+        $("btn3").onclick = function() {
+            let lfChild = $("left").children
+            for (let i = 0; i < lfChild.length; i++) {
+                if (lfChild[i].selected) {
+                    $("right").appendChild(lfChild[i])
+                }
+            }
+        }
+
+        // 全部向左
+        $("btn2").onclick = function() {
+            $("left").innerHTML += $("right").innerHTML
+            $("right").innerHTML = ""
+        }
+
+        // 全部向右
+        $("btn1").onclick = function() {
+            /* // 循环两次 队列操作
+            let lfChild = $("left").children
+                 let new_arr = []
+                 for (let i = lfChild.length - 1; i >= 0; i--) {
+                     new_arr.push(lfChild[i])
+                 }
+            for (let i = new_arr.length - 1; i >= 0; i--) {
+                // $("right").appendChild(lfChild[(lfChild.length - i - 1)])
+                $("right").appendChild(new_arr[i])
+            } */
+
+
+            /* for (var i = 0; i < $("left").children.length;) {
+                $("right").appendChild($("left").children[0]);
+                console.log(11)
+            } */
+
+            $("right").innerHTML += $("left").innerHTML;
+            $("left").innerHTML = "";
+
+        }
+    </script>
+</body>
+
+</html>

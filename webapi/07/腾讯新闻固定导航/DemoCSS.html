@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+        
+        img {
+            vertical-align: top;
+        }
+        
+        .main {
+            margin: 0 auto;
+            width: 1000px;
+            margin-top: 10px;
+        }
+        
+        .fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top" id="topPart">
+        <img id="pic" src="images/top.png" alt="" />
+    </div>
+
+    <div class="nav" id="navBar">
+        <img src="images/nav.png" alt="" />
+    </div>
+
+    <div class="main" id="mainPart">
+        <img src="images/main.png" alt="" />
+    </div>
+
+    <script>
+        // 找到上面那部分的div
+        var topPart = document.getElementById('topPart');
+        // 找到导航条
+        var navBar = document.getElementById('navBar');
+        // 找到正文
+        var mainPart = document.getElementById('mainPart');
+        window.onscroll = function() {
+            // 获取浏览器滚动出去的高度
+            var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop ||
+                0;
+            if (scrollTop >= topPart.offsetHeight) {
+                navBar.className += " fixed"
+                mainPart.style.marginTop = 10 + navBar.offsetHeight + "px"
+            } else {
+                navBar.className = "nav"
+                mainPart.style.marginTop = 10 + "px"
+            }
+        }
+    </script>
+
+</body>
+
+</html>

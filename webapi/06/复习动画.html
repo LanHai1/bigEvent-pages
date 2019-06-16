@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            background-color: hotpink;
+        }
+        
+        .box1 {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 200px;
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="button" value="粉色移动400" id="btn1" title="400">
+    <input type="button" value="粉色移动800" id="btn2" title="800">
+    <input type="button" value="红色移动400" id="btn3" title="400">
+    <input type="button" value="红色移动800" id="btn4" title="800">
+    <div class="box"></div>
+    <div class="box1"></div>
+    <script>
+        function $(id) {
+            return document.getElementById(id)
+        }
+        let box = document.querySelector(".box")
+        let box1 = document.querySelector(".box1")
+
+
+        $("btn1").onclick = function() {
+            setLeft(box, parseInt(this.title))
+
+        }
+        $("btn2").onclick = function() {
+            setLeft(box, parseInt(this.title))
+        }
+        $("btn3").onclick = function() {
+            setLeft(box1, parseInt(this.title))
+        }
+        $("btn4").onclick = function() {
+            setLeft(box1, parseInt(this.title))
+        }
+
+        function setLeft(el, target) {
+            clearInterval(el.timeId)
+            let count = el.offsetLeft
+            el.timeId = setInterval(function() {
+                count += target > count ? 10 : -10
+                count = Math.abs(target - count) > 10 ? count : target
+                el.style.left = `${count}px`
+                if (count == target) {
+                    clearInterval(el.timeId)
+                }
+            }, 10)
+        }
+    </script>
+</body>
+
+</html>

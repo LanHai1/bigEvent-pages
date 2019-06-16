@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        
+        .clearfix {
+            *zoom: 1;
+        }
+        
+        .clearfix::after {
+            content: "";
+            display: block;
+            /* display: inline-block; */
+            clear: both;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        a {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        .con {
+            width: 500px;
+            margin: 100px auto;
+        }
+        
+        ul,
+        ol {
+            list-style: none;
+            margin: 10px
+        }
+        
+        li {
+            float: left;
+            width: 80px;
+            height: 30px;
+            background-color: red;
+        }
+        
+        ul>li {
+            text-align: center;
+            line-height: 30px;
+            margin: 0 5px;
+            border-radius: 3px;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        
+        ul>li:first-child {
+            background-color: #66CC33;
+        }
+        
+        ul>li:nth-child(2) {
+            background-color: #33CC4D;
+        }
+        
+        ul>li:nth-child(3) {
+            background-color: #33CC99;
+        }
+        
+        ul>li:last-child {
+            background-color: #33b3cc;
+        }
+        
+        ul>li>a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 12px;
+        }
+        
+        ol>li {
+            width: 365px;
+            height: 300px;
+            display: none;
+            border-radius: 3px;
+            line-height: 300px;
+            text-align: center;
+            color: #fff;
+            font-size: 50px;
+        }
+        
+        ol>li:first-child {
+            background-color: #66CC33;
+        }
+        
+        ol>li:nth-child(2) {
+            background-color: #33CC4D;
+        }
+        
+        ol>li:nth-child(3) {
+            background-color: #33CC99;
+        }
+        
+        ol>li:last-child {
+            background-color: #33b3cc;
+        }
+        
+        ul>li.active {
+            border: 1px dashed #f7f6f6;
+            box-shadow: 2px 2px 3px 0px #ccc;
+        }
+        
+        ol>li.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="con">
+        <ul id="ul_con" class="clearfix">
+            <li class="active">
+                <a href="javacript:void(0)">第一个</a>
+            </li>
+            <li>
+                <a href="javacript:void(0)">第二个</a>
+            </li>
+            <li>
+                <a href="javacript:void(0)">第三个</a>
+            </li>
+            <li>
+                <a href="javacript:void(0)">第四个</a>
+            </li>
+        </ul>
+        <ol id="ol_con" class="clearfix">
+            <li class="active">1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ol>
+    </div>
+    <script>
+        function $(id) {
+            return document.getElementById(id)
+        }
+        let ul_lis = $("ul_con").getElementsByTagName("li")
+        let ol_lis = $("ol_con").getElementsByTagName("li")
+
+        for (let i = 0; i < ul_lis.length; i++) {
+            ul_lis[i].onmouseover = function() {
+                ul_lis[i].setAttribute("index", i) // 索引
+                for (let i = 0; i < ul_lis.length; i++) {
+                    ul_lis[i].removeAttribute("class")
+                    ol_lis[i].removeAttribute("class")
+                }
+                this.className = "active"
+                ol_lis[+this.getAttribute("index")].className = "active"
+            }
+        }
+    </script>
+</body>
+
+</html>
