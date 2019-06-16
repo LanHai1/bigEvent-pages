@@ -68,7 +68,7 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addModal">新增分类</a>
+                            <a href="#" class="btn btn-success" id="btn-add-success" data-toggle="modal" data-target="#addModal">新增分类</a>
                         </td>
                     </tr>
                 </tfoot>
@@ -84,14 +84,15 @@
                     <h4 class="modal-title">新增分类</h4>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="addModelForm">
+                        <input type="hidden" name="id" id="inputId" value="">
                         <div class="form-group">
                             <label for="recipient-name" class="control-label">分类名称:</label>
-                            <input type="text" class="form-control" id="recipient-name">
+                            <input type="text" class="form-control form_name" name="name" id="recipient-name">
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="control-label">分类别名:</label>
-                            <input type="text" class="form-control" id="recipient-name">
+                            <input type="text" class="form-control form_bm" name="slug" id="recipient-name">
                         </div>
                     </form>
                 </div>
@@ -116,13 +117,6 @@
         $('#model_add').click(function() {
             $('#addModal').modal('hide');
         });
-
-        $('.category_table').delegate('a', 'click', function() {
-            if ($(this).hasClass('btn-info')) {
-                $('#addModal .modal-title').html('修改分类名称');
-                $('#addModal').modal('show');
-            }
-        })
     </script>
 
     <script src="js/art-template/lib/template-web.js"></script>
@@ -132,8 +126,8 @@
             <td>{{v.name}}</td>
             <td>{{v.slug}}</td>
             <td class="text-center">
-                <a href="javascript:;" data-id={{v.id}} class="btn btn-info btn-xs">编辑</a>
-                <a href="javascript:;" data-id={{v.id}} class="btn btn-danger btn-xs">删除</a>
+                <a href="#" data-id={{v.id}} class="btn btn-info btn-xs">编辑</a>
+                <a href="#" data-id={{v.id}} class="btn btn-danger btn-xs">删除</a>
             </td>
         </tr>
         {{/each}}
@@ -141,13 +135,77 @@
     <script>
         $(() => {
             // 文章类别渲染
-            $.ajax({
-                type: "get",
-                url: "http://localhost:8000/admin/category_search",
-                success: function(response) {
-                    $("tbody").html(template("temp_category_con", response))
+            function getCategoryData() {
+                $.ajax({
+                    type: "get",
+                    url: "http://localhost:8000/admin/category_search",
+                    success: function(response) {
+                        $("tbody").html(template("temp_category_con", response))
+                    }
+                });
+            }
+            getCategoryData();
+            // 文章类别编辑
+            // 存放编辑的当前数据条
+            let msgId;
+            $("tbody").on("click", ".btn-info", function() {
+                msgId = $(this);
+                // 渲染对应文本
+                $("#inputId").val($(this).data('id'))
+                $(".form_name").val($(this).parent().parent().find("td").eq(0).text());
+                $(".form_bm").val($(this).parent().parent().find("td").eq(1).text());
+
+                $('#addModal .modal-title').html('修改分类名称');
+                $("#model_add").text("修改").addClass("btn-success")
+                $('#addModal').modal('show');
+            })
+
+            // 新增文章类别
+            $("#btn-add-success").on("click", function() {
+                $('#addModal .modal-title').html('新增分类');
+                $(".form_name").val("");
+                $(".form_bm").val("");
+                $("#model_add").text("新增").removeClass("btn-success")
+            })
+
+            // 新增or修改
+            $("#model_add").on("click", function() {
+                // 存放this
+                let than = $(this);
+                // 编辑
+                if ($(this).hasClass("btn-success")) {
+                    $.ajax({
+                        type: "post",
+                        url: "http://localhost:8000/admin/category_edit",
+                        data: $("#addModelForm").serialize(),
+                        success: function(response) {
+                            // 修改成功
+                            if (response.code === 200) {
+                                // 优化 修改页面对应input
+                                msgId.parent().prev().prev().text($(".form_name").val())
+                                msgId.parent().prev().text($(".form_bm").val())
+                            }
+                        }
+                    });
+                    return
                 }
-            });
+                // 新增
+                $.ajax({
+                    type: "post",
+                    url: "http://localhost:8000/admin/category_add",
+                    data: {
+                        name: $(".form_name").val(),
+                        slug: $(".form_bm").val()
+                    },
+                    success: function(response) {
+                        // 因为这里需要id 仅新增无法拿到id 所以无法做优化
+                        if (response.code === 200) {
+                            getCategoryData()
+                        }
+                    }
+                });
+            })
+
         })
     </script>
 
