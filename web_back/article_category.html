@@ -206,6 +206,25 @@
                 });
             })
 
+            // 删除文章类别
+            $("tbody").on("click", ".btn-danger", function() {
+                let than = $(this)
+                let id = $(this).data("id")
+                $.ajax({
+                    type: "post",
+                    url: "http://localhost:8000/admin/category_delete",
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        if (response.code === 200) {
+                            // 优化 删除
+                            than.parent().parent().remove()
+                        }
+                    }
+                });
+            })
+
         })
     </script>
 
