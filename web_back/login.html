@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/reset.css">
     <link rel="stylesheet" type="text/css" href="css/iconfont.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -23,13 +24,73 @@
             <form class="login_form">
                 <i class="iconfont icon-user"></i>
                 <i class="iconfont icon-key"></i>
-                <input type="text" class="input_txt" placeholder="邮箱/手机号">
-                <input type="password" class="input_pass" placeholder="密码">
+                <input type="text" class="input_txt" name="user_name" placeholder="邮箱/手机号">
+                <input type="password" class="input_pass" name="password" placeholder="密码">
                 <input type="submit" class="input_sub" value="登 录">
             </form>
         </div>
 
-    </div> 
+    </div>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+    Launch demo modal
+  </button>
+
+    <!-- Modal 模态框 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">提示</h4>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery-1.12.4.min.js"></script>
+    <script src="js/bootstrap/js/bootstrap.min.js"></script>
+
+    <script>
+        $(() => {
+            // login in 
+            $(".input_sub").on("click", (e) => {
+                e.preventDefault()
+                $.ajax({
+                    type: "post",
+                    url: "http://localhost:8000/admin/login",
+                    data: $(".login_form").serialize(),
+                    success: function(response) {
+                        // 输入为空
+                        if ($(".input_txt").val().length === 0 || $(".input_pass").val().length === 0) {
+                            msgHandler("账号或密码不能为空")
+                            return
+                        }
+                        // 输入错误
+                        if (response.code !== 200) {
+                            msgHandler("请输入正确的账号或密码");
+                            // 重置
+                            $(".input_txt")[0].value = $(".input_pass")[0].value = "";
+                            return
+                        }
+                        // 成功
+                        window.location.href = "./index.html"
+                    }
+                });
+            });
+            // 提示信息处理
+            function msgHandler(msg) {
+                $('#myModal').modal({
+                    keyboard: true
+                })
+                $(".modal-body").text(msg)
+            }
+        })
+    </script>
 
 </body>
 
