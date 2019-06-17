@@ -31,6 +31,7 @@
                             <option value="草稿">草稿</option>
                             <option value="已发布">已发布</option>
                         </select>
+                        <input type="hidden" name="key" id="searchKey" value="">
                         <button id="btnSearch" class="btn btn-default btn-sm">筛选</button>
                     </form>
                 </div>
@@ -151,16 +152,11 @@
             /*
              获取文章 并渲染对应页码
              */
-            function getArticle(page, key) {
-                let data = key ? {
+            function getArticle(page) {
+                let data = {
                     page: page,
                     perpage: 10,
-                    key: key,
-                    type: $("#selCategory").val(),
-                    state: $("#selStatus").val()
-                } : {
-                    page: page,
-                    perpage: 10,
+                    key: $("#searchKey").val(),
                     type: $("#selCategory").val(),
                     state: $("#selStatus").val()
                 }
@@ -169,8 +165,8 @@
                     url: "http://localhost:8000/admin/search",
                     data: data,
                     success: function(response) {
-                        $("tbody").html(template("temp_article_con", response))
-                        console.log(response); // 输出三次?
+                        $("tbody").html(template("temp_article_con", response));
+                        // console.log(response); // 输出三次?
 
                         // 分页处理
                         var totalPages = response.totalPage;
@@ -183,6 +179,8 @@
                                 totalPages: totalPages
                             }));
                         }
+
+                        $("#searchKey").val("")
                     }
                 });
             }
@@ -193,7 +191,8 @@
             // 搜索功能
             parent.$(".search_form>.icon-search").on("click", function() {
                 let searchVal = $(this).prev().val()
-                getArticle(1, searchVal)
+                $("#searchKey").val(searchVal)
+                $("#btnSearch").trigger("click")
             })
 
         })
