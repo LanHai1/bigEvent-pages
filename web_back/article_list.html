@@ -151,17 +151,26 @@
             /*
              获取文章 并渲染对应页码
              */
-            function getArticle(page) {
+            function getArticle(page, key) {
+                let data = key ? {
+                    page: page,
+                    perpage: 10,
+                    key: key,
+                    type: $("#selCategory").val(),
+                    state: $("#selStatus").val()
+                } : {
+                    page: page,
+                    perpage: 10,
+                    type: $("#selCategory").val(),
+                    state: $("#selStatus").val()
+                }
                 $.ajax({
                     type: "get",
                     url: "http://localhost:8000/admin/search",
-                    data: {
-                        page: page,
-                        type: $("#selCategory").val(),
-                        state: $("#selStatus").val()
-                    },
+                    data: data,
                     success: function(response) {
                         $("tbody").html(template("temp_article_con", response))
+                        console.log(response); // 输出三次?
 
                         // 分页处理
                         var totalPages = response.totalPage;
@@ -180,6 +189,12 @@
 
             // 注意 有可能此时模版还未渲染 所以在初始数据上的option 也要设置value
             $("#btnSearch").trigger("click")
+
+            // 搜索功能
+            parent.$(".search_form>.icon-search").on("click", function() {
+                let searchVal = $(this).prev().val()
+                getArticle(1, searchVal)
+            })
 
         })
     </script>
