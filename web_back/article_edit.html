@@ -40,7 +40,7 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">文章类别：</label>
                     <div class="col-sm-4">
-                        <select class="form-control" name="type">
+                        <select class="form-control form_select" name="type">
                             <option>类别一</option>
                             <option>类别二</option>
                             <option>类别三</option>
@@ -71,13 +71,31 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-success">修改</button>
+                        <button type="submit" class="btn btn-success btn-submit-s">修改</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-sm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">提示</h4>
+                </div>
+                <div class="modal-body">请更新封面图片</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/art-template/lib/template-web.js"></script>
+    <script src="js/bootstrap/js/bootstrap.min.js"></script>
     <!-- 文章类别模版 -->
     <script id="temp_classification" type="text/html">
         {{each data v}}
@@ -91,7 +109,7 @@
                 type: "get",
                 url: "http://localhost:8000/admin/category_search",
                 success: function(response) {
-                    $(".form-control").html(template("temp_classification", response))
+                    $(".form_select").html(template("temp_classification", response))
                 }
             });
 
@@ -105,7 +123,7 @@
                 },
                 success: function(response) {
                     // 处理类别选中
-                    $(`.form-control>option[value=${+response.data.type}]`).prop("selected", true)
+                    $(`.form_select>option[value=${+response.data.type}]`).prop("selected", true)
                     for (const key in response.data) {
                         // 处理文章封面
                         if (key === "cover") {
@@ -116,6 +134,44 @@
                     }
                 }
             });
+
+            // 图片上传预览
+            const windowURL = window.URL || window.webkitURL;
+            $("#exampleInputFile").change(function() {
+                $(".article_cover").attr("src", windowURL.createObjectURL($(this)[0].files[0]));
+            })
+
+            // 文章列表修改
+            $(".btn-submit-s").on("click", (e) => {
+                e.preventDefault()
+                let formData = new FormData($(".article_form")[0])
+                formData.append("id", id)
+                formData.append("content", tinyMCE.activeEditor.getContent());
+
+                // 图片上传不能为空 否则不能修改信息
+                if ($("#exampleInputFile").val().length === 0) {
+                    $(".modal-body").text("请更新封面图片")
+                    $('#myModal').modal({
+                        keyboard: true
+                    })
+                    return
+                }
+                $.ajax({
+                    type: "post",
+                    url: "http://localhost:8000/admin/article_edit",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.code === 200) {
+                            $(".modal-body").text("修改成功")
+                            $('#myModal').modal({
+                                keyboard: true
+                            })
+                        }
+                    }
+                });
+            })
 
         })
     </script>
