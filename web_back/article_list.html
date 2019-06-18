@@ -84,6 +84,21 @@
 
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content modal-sm">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">提示</h4>
+                </div>
+                <div class="modal-body">删除成功</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // 设置左侧菜单
@@ -92,6 +107,7 @@
         })
     </script>
     <script src="js/art-template/lib/template-web.js"></script>
+    <script src="js/bootstrap/js/bootstrap.min.js"></script>
     <!-- 文章分类模版 -->
     <script id="temp_classification" type="text/html">
         <option value="">所有分类</option>
@@ -110,7 +126,7 @@
             <td class="text-center">{{$value.state}}</td>
             <td class="text-center">
                 <a href="article_edit.html?id={{$value.id}}" class="btn btn-default btn-xs">编辑</a>
-                <a href="javascript:deleteTr( 1005 );" class="btn btn-danger btn-xs">删除</a>
+                <a href="javascript:" data-id="{{$value.id}}" class="btn btn-danger btn-xs">删除</a>
             </td>
         </tr>
         {{/each}}
@@ -147,6 +163,7 @@
             $("#btnSearch").on("click", (e) => {
                 e.preventDefault()
                 getArticle(1)
+                    // parent.$(".search_form>input").val(" ")
             })
 
             /*
@@ -180,7 +197,7 @@
                             }));
                         }
 
-                        $("#searchKey").val("")
+                        $("#searchKey").val(" ")
                     }
                 });
             }
@@ -193,6 +210,26 @@
                 let searchVal = $(this).prev().val()
                 $("#searchKey").val(searchVal)
                 $("#btnSearch").trigger("click")
+            })
+
+            // 文章删除
+            $("tbody").on("click", ".btn-danger", function() {
+                let id = $(this).data("id");
+                $.ajax({
+                    type: "get",
+                    url: "http://localhost:8000/admin/article_delete",
+                    data: {
+                        id
+                    },
+                    success: function(response) {
+                        if (response.code === 200) {
+                            $('#myModal').modal({
+                                keyboard: true
+                            })
+                            getArticle(1)
+                        }
+                    }
+                });
             })
 
         })
